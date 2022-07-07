@@ -1,0 +1,212 @@
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<section class="variants_section">
+    <div class="container">
+        <div class="row justify-content-lg-center">
+          <div class="col-lg-9">
+            <div class="rich_text_main text-lg-center">
+              {% if section.settings.heading != blank %}
+              <h1 class="font-s-32 fw-500">{{ section.settings.heading }}</h1>
+              {% endif %}
+              <div class="banner_description my-4 font-s-18 fw-300 pr-md-4">
+                {% if section.settings.rich_text != blank %}
+                {{ section.settings.rich_text }}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slider_main_section mt-md-5">
+          {% for block in section.blocks %}
+          <div>
+          <div class="row align-items-center">
+              <div class="col-lg-6 order-2 order-lg-1">
+                <div class="slider_content">
+                    {% if block.settings.heading != blank %}
+                      <h2 class="font-s-28 fw-500 mb-4">{{ block.settings.heading }}</h2>
+                    {% endif %}
+                    {% if block.settings.text != blank %}
+                      {{ block.settings.text }}
+                    {% endif %}
+                </div>
+              </div>
+              <div class="col-lg-6 order-1 order-lg-2">
+                {% if block.settings.variants_img1 != blank %}
+                <div class="variant_img text-center">
+                    <img src="{{ block.settings.variants_img1 | img_url: 'master' }}" class="mx-auto">
+                </div>
+                {% endif %}
+              </div>
+          </div>
+        </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+    {% comment %}
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      {% for block in section.blocks %}
+      
+      {% assign blockCount = section.blocks.size %}
+      {% assign totalImage = 36.0 %}
+      {% assign avgImg = totalImage|divided_by: blockCount| ceil  %}
+      {% assign index = forloop.index0 %}
+      {% assign start = index | times: avgImg %}
+      {% assign end = start | plus: avgImg %}
+      
+      	{% for capCounter in (start..end) %}
+      	  {% assign imgName = "tabletpng" | append: capCounter | append: ".png" %}
+          {% if capCounter <= totalImage %}            		 
+            <div class="swiper-slide">
+              <div class="container">
+                <div class="row align-items-center">
+                  <div class="col-lg-6 order-2 order-lg-1 text_content content_main current_animated">
+                    {% if block.settings.heading != blank %}
+                    <h2 class="font-s-28 fw-500 mb-4">{{ block.settings.heading }}</h2>
+                    {% endif %}
+                    {% if block.settings.text != blank %}
+                    {{ block.settings.text }}
+                    {% endif %}
+                  </div>
+                  <div class="col-lg-6 order-1 order-lg-2 text-center">
+                    <img src="{{ imgName | asset_img_url: 'master' }}" />		
+                  </div>
+                </div>
+              </div>
+            </div>
+      	   {% endif %}
+          {% endfor %}
+      {% endfor %}
+    </div>
+    {% endcomment %}
+  </div>
+</section>
+
+<style>
+  .mySwiper{
+    height: 450px;
+  }
+  .mySwiper .swiper-slide{
+    background-color:#f6f3f0;
+  }
+  .content_main {
+      opacity: 0;
+    -moz-transition: all 1000ms ease-out;
+    -webkit-transition: all 1000ms ease-out;
+    -o-transition: all 1000ms ease-out;
+    transition: all 1000ms ease-out;
+    -moz-transform: translate3d(-200px, 0px, 0px);
+    -webkit-transform: translate3d(-200px, 0px, 0px);
+    -o-transform: translate(-200px, 0);
+    -ms-transform: translate(-200px, 0px);
+    transform: translate3d(0, 0, -200);
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    }
+    .content_main.current_animated{
+      opacity: 1;
+    -moz-transform: translate3d(0px, 0px, 0px);
+    -webkit-transform: translate3d(0px, 0px, 0px);
+    -o-transform: translate(0px, 0px);
+    -ms-transform: translate(0px, 0px);
+    transform: translate3d(0px, 0px, 0px);
+    }
+    @media (max-width:767px){
+        .mySwiper{
+            height: 500px;
+        }
+    }
+    /* @media (min-width:992px) and (max-width:1300px){
+        .mySwiper{
+            height: 600px;
+        }
+    } */
+    .variants_section .active{
+        position: sticky;
+    }
+</style>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  
+<script>
+  var swiper = new Swiper(".mySwiper", {
+    direction: "vertical",
+    mousewheel: {
+      forceToAxis: true,
+      sensitivity: 1,
+      releaseOnEdges: true,
+    },
+    effect: "fade",
+    speed:0.1,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+  });
+</script>
+
+<script>
+    $(window).scroll(function(){
+    if($(window).scrollTop() >= $(".variants_section").offset().top + $(".variants_section").height() || $(window).scrollTop() < $(".variants_section").offset().top)
+        $('.variants_section').removeClass('active');
+    else
+        $('.variants_section').addClass('active');
+})
+    </script>
+{% schema %}
+  {
+  "name": "Animation Section",
+  "settings": [
+{
+                "type": "text",
+                "id": "heading",
+                "label": "Heading"
+            },
+            {
+                "type": "richtext",
+                "id":"rich_text",
+                "label": "Text"
+            }
+],
+  "blocks":[
+  {
+    "type": "columnText",
+    "name": "Text",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text"
+      },
+      {
+        "type": "image_picker",
+        "id": "variants_img1",
+        "label": "Variats image 1"
+      }
+    ]
+  }
+  ],
+  "presets": [
+  {
+  "name": {
+  "en": "animtion text"
+  },
+  "category": {
+  "en": "Rich text"
+  }
+  }
+  ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
